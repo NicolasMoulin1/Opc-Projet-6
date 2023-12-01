@@ -1,3 +1,5 @@
+
+
 //Variable globale//
 
 const gallery = document.querySelector(".gallery")
@@ -33,3 +35,25 @@ async function displayWorks(){
     });
 }
 
+const filter = document.querySelector(".filter")
+
+async function getCategories() {
+
+    const response = await fetch ("http://localhost:5678/api/categories")
+    return await response.json()
+}
+
+getCategories()
+filters()
+
+async function filters() {
+
+    const arrayFilters = await getCategories()
+    console.log(arrayFilters)
+    arrayFilters.forEach(categorie => {
+        const filterButton = document.createElement("button")
+        filterButton.innerText = categorie.name
+        filter.appendChild(filterButton)
+        
+    })
+}
