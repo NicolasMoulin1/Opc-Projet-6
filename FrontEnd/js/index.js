@@ -1,8 +1,9 @@
 //****  Variables  ****//
 const gallery = document.querySelector(".gallery");
 const filters = document.querySelector(".filters");
-const body = document.querySelector("body");
+const body = document.querySelector("body")
 const modalGallery = document.querySelector(".modalGallery");
+const select = document.querySelector("select")
 
 //**** Variables pour la partie connexion ****//
 const token = sessionStorage.getItem("token");
@@ -13,9 +14,7 @@ const adminEdit = document.querySelectorAll(".adminEdit");
 //****  Déclaration des fonction  ****//
 
 function main() {
-  getWorks();
   displayWorks();
-  getCategorys();
   displayCategorysButton();
 }
 
@@ -83,6 +82,12 @@ async function displayCategorysButton() {
       console.log(id);
     });
     filters.appendChild(filterButton);
+    
+    //**** Ajout des option dans le select ****//
+    const option = document.createElement("option")
+    option.innerText = categorys.name
+    option.value = categorys.id
+    select.appendChild(option)
   });
   const buttonTous = document.getElementById("btnTous");
   buttonTous.addEventListener("click", (e) => {
@@ -116,6 +121,7 @@ logout.addEventListener("click", (e) => {
   console.log("je me deconnecte car mon token est vide");
   console.log("je click sur logout");
   window.sessionStorage.setItem("token", "");
+  window.sessionStorage.setItem("userId", "");
   window.location.href = "index.html";
   if (token == "") {
     window.location.href = "login.html";
