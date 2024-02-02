@@ -245,7 +245,6 @@ li:hover {
 }
 #contact form {
   text-align: left;
-  margin-top: 30px;
   display: flex;
   flex-direction: column;
 }
@@ -278,6 +277,10 @@ input[type="submit"] {
 .filters {
   display: flex;
   justify-content: center;
+}
+#filters button.active {
+  background-color: #1d6154;
+  color: white;
 }
 
 button {
@@ -483,7 +486,7 @@ h3 {
   font-size: 26px;
 }
 
-form {
+#formAddWorks {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -586,3 +589,5 @@ input#file {
   z-index: 2;
   position: absolute;
 }
+
+

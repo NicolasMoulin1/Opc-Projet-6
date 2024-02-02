@@ -12,7 +12,7 @@ const xmarkModal2 = document.querySelector(".modalAddWorks .fa-xmark");
 //**** Variable pour le Form ****//
 const formAddWorks = document.getElementById("formAddWorks");
 const inputFile = document.querySelector("#file");
-const inputTitle = document.querySelector("#title")
+const inputTitle = document.querySelector("#title");
 const previewImage = document.getElementById("previewImage");
 
 function mainModal() {
@@ -30,22 +30,21 @@ mainModal();
 //****On affiche la modale au clic sur modifier ****//
 function displayModal() {
   modifier.addEventListener("click", () => {
-    console.log("on affiche la modal");
     modalContent.style.display = "flex";
     modalPortfolio.style.display = "flex";
     modalAddWorks.style.display = "none";
   });
 }
+
 //**** On affiche la modal au clic sur ajout photo ****//
 function displayModalAddWorks() {
   buttonAdd.addEventListener("click", () => {
-    console.log("affiche la modal2");
     modalPortfolio.style.display = "none";
     modalAddWorks.style.display = "flex";
   });
 }
 
-//**** On retourne en arriere.****//
+//**** On retourne en arriere. ****//
 function returnToModalPortfolio() {
   const arrowLeftModalWorks = document.querySelector(
     ".modalAddWorks .fa-arrow-left"
@@ -56,25 +55,22 @@ function returnToModalPortfolio() {
     previewImage.style.display = "none";
     inputTitle.value = null; // Réinitialise la valeur du champ du Titre
     inputFile.value = null; // Réinitialise la valeur du champ d'entrée de type fichier
-    console.log("retour en arriere");
   });
 }
 
+//**** Fermeture de la modal de la croix 1 ****//
 function closeModalGallery() {
-  //**** Fermeture de la modal de la croix 1 ****//
-
   xmarkModal.addEventListener("click", () => {
-    console.log("On quitte la modal1");
     modalContent.style.display = "none";
   });
-  //**** Fermeture de la modal de la croix 2 ****//
 
+  //**** Fermeture de la modal de la croix 2 ****//
   xmarkModal2.addEventListener("click", () => {
-    console.log("On quitte la modal2");
     modalContent.style.display = "none";
     inputTitle.value = null; // Réinitialise la valeur du champ du Titre
     inputFile.value = null; // Réinitialise la valeur du champ d'entrée de type fichier
   });
+
   //**** On ferme la modal au clic sur la partie grise ****//
   body.addEventListener("click", (e) => {
     if (e.target == modalContent) {
@@ -83,15 +79,14 @@ function closeModalGallery() {
       previewImage.style.display = "none";
       inputTitle.value = null; // Réinitialise la valeur du champ du Titre
       inputFile.value = null; // Réinitialise la valeur du champ d'entrée de type fichier
-      console.log("on quiite la modalGris");
     }
   });
 }
 
+//**** Fonction pour prévisualiser une image avant de l'ajouter ****//
 function prevImage(event) {
   inputFile.addEventListener("input", () => {
     const file = inputFile.files[0];
-    console.log(file);
     if (file) {
       const reader = new FileReader();
       reader.onload = function (e) {
@@ -106,15 +101,21 @@ function prevImage(event) {
   });
 }
 
-//**** Affichage de la gallery dans la modale ****//
+//**** Fonction asynchrone pour afficher les travaux dans la modal ****//
 async function displayWorksModal() {
   modalGallery.innerHTML = "";
+
+  //**** Récupérer la liste des image de la API ****//
   const gallery = await getWorks();
+
+  //**** Parcourir la liste et créer des éléments HTML ****//
   gallery.forEach((work) => {
     const figure = document.createElement("figure");
     const imgModal = document.createElement("img");
     const span = document.createElement("span");
     const trash = document.createElement("i");
+
+    //**** Ajouter des classes et des attributs aux éléments créés ****//
     trash.classList.add("fa-solid", "fa-trash-can");
     span.classList.add("icon-trash");
     trash.id = work.id;
@@ -124,6 +125,7 @@ async function displayWorksModal() {
     figure.appendChild(imgModal);
     modalGallery.appendChild(figure);
   });
+  //**** Ajouter la fonctionnalité de suppression pour chaque image ****//
   deleteImg();
 }
 
@@ -133,6 +135,7 @@ function deleteImg() {
   trashAll.forEach((trash) => {
     trash.addEventListener("click", (e) => {
       const id = trash.id;
+      //**** Configurer les options pour la requête de suppression ****//
       const init = {
         method: "DELETE",
         headers: {
@@ -140,14 +143,16 @@ function deleteImg() {
           "Content-Type": "application/json",
         },
       };
+      //**** Envoyer la requête à l'API ****//
       fetch("http://localhost:5678/api/works/" + id, init)
+        //**** Le delete n'a pas fonctionner  ****//
         .then((response) => {
           if (!response.ok) {
-            console.log("Le delete ne fonctionne pas !");
           }
         })
+        //*** Le delete a fonctionner  ****//
+        //**** Mettre à jour l'affichage des image après la suppression ****//
         .then((data) => {
-          console.log("Le delete a fonctionner voici la data : ");
           displayWorks();
           displayWorksModal();
         });
@@ -155,49 +160,41 @@ function deleteImg() {
   });
 }
 
-//**** Code pour faire la methode Post ****//
-/*
-const buttonSubmit = document.querySelector(".button-add-work");
-buttonSubmit.addEventListener("click", async (event) => {
-  event.preventDefault();
-  submitForm();
-});
-*/
+//**** Fonction pour soumettre le formulaire d'ajout d'image ****//
 function submitForm() {
-  // Assurez-vous que la variable 'form' est définie avec le formulaire que vous souhaitez envoyer
   const formAddProjet = document.getElementById("formAddWorks");
   formAddProjet.addEventListener("submit", (e) => {
     e.preventDefault();
+    //**** Créer un objet FormData à partir du formulaire ****//
     const formData = new FormData(formAddProjet);
-    console.log(formData);
-    // Ajoutez ici l'URL du serveur qui va recevoir les données
-    const apiUrl = "http://localhost:5678/api/works";
 
-    fetch(apiUrl, {
+    //****Configurer les options pour la requête POST ****//
+    fetch("http://localhost:5678/api/works", {
       method: "POST",
       body: formData,
       headers: {
         authorization: `Bearer ${token}`,
-        // Ajoutez d'autres en-têtes si nécessaire
       },
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Réponse du serveur :", data);
+        //**** Cacher la modal d'ajout d'image et afficher la modal principale ****//
         modalAddWorks.style.display = "none";
         modalPortfolio.style.display = "flex";
-        inputTitle.value = null; // Réinitialise la valeur du champ du Titre
-        inputFile.value = null; // Réinitialise la valeur du champ d'entrée de type fichier
-        previewImage.style.display = "none"
+
+        //**** Réinitialiser les champs du formulaire et la prévisualisation de l'image ****//
+        inputTitle.value = null;
+        inputFile.value = null;
+        previewImage.style.display = "none";
+
+        //**** Mettre à jour l'affichage ****//
         displayWorksModal();
         displayWorks();
-
-        // Ajoutez ici le code pour traiter la réponse du serveur si nécessaire
       })
       .catch((error) => {
         console.error("Erreur lors de l'envoi des données :", error);
-        // Ajoutez ici le code pour gérer les erreurs si nécessaire
       });
   });
 }
+//**** Appele de la fonction pour soumettre le formulaire ****//
 submitForm();

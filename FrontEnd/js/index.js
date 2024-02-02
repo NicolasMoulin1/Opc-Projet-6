@@ -11,31 +11,25 @@ const logout = document.querySelector(".login");
 const adminEdit = document.querySelectorAll(".adminEdit");
 
 
-//****  Déclaration des fonction  ****//
-
+//**** Fonction principale ****//
 function main() {
   displayWorks();
   displayCategorysButton();
 }
 
-//****  Déclaration de la fonction Main  ****//
-
+//**** Appel de la fonction principale ****//
 main();
 
-//****  Affichige des Images  ****//
-
-//****  Récupérer qui retourne le tableau des images  ****/
-
+//**** Affichage des Images ****//
+//**** Fonction pour récupérer le tableau des images ****//
 async function getWorks() {
   const response = await fetch("http://localhost:5678/api/works");
   return await response.json();
 }
 
-//****  Affichage des works dans le dom */
-
+//**** Fonction pour afficher les works dans le DOM ****/
 async function displayWorks() {
   const arrayWorks = await getWorks();
-  console.log(arrayWorks);
   gallery.innerHTML = "";
   arrayWorks.forEach((work) => {
     const figure = document.createElement("figure");
@@ -54,24 +48,24 @@ async function displayWorks() {
   });
 }
 
-//******************************      Affichage des buttons par catégories      ***********************************//
-
-//*****************************   Récupérer le tableau des catégories   *******************************//
-
+//**** Affichage des buttons par catégories ****//
+//**** Récupérer le tableau des catégories ****//
 async function getCategorys() {
   const response = await fetch("http://localhost:5678/api/categories");
   return await response.json();
 }
 
+//**** Fonction pour afficher les boutons de catégories ****/
 async function displayCategorysButton() {
   const categorys = await getCategorys();
-  console.log(categorys);
   categorys.forEach((categorys) => {
     const filterButton = document.createElement("button");
     filterButton.innerText = categorys.name;
     filterButton.setAttribute("data-id", categorys.id);
     filterButton.addEventListener("click", (e) => {
       const id = e.target.getAttribute("data-id");
+      document.querySelector(".active").classList.remove("active")
+      e.target.classList.add("active")
       const projets = document.querySelectorAll(".gallery figure");
       projets.forEach((projet) => {
         projet.style.display = "block";
@@ -79,7 +73,6 @@ async function displayCategorysButton() {
           projet.style.display = "none";
         }
       });
-      console.log(id);
     });
     filters.appendChild(filterButton);
     
@@ -91,21 +84,19 @@ async function displayCategorysButton() {
   });
   const buttonTous = document.getElementById("btnTous");
   buttonTous.addEventListener("click", (e) => {
+    document.querySelector(".active").classList.remove("active")
+    e.target.classList.add("active")
     const projets = document.querySelectorAll(".gallery figure");
     projets.forEach((projet) => {
       projet.style.display = "block";
     });
-    console.log("buttonTous");
   });
 }
 
-//**** ici commence le mode édition ****//
+//**** Mode édition ****//
 //**** Si l'utilisateur est connecté ****//
-//**** Voici mon token ****//
-//console.log(token);
-
+//**** Vérification du token ****//
 if (token) {
-  //console.log("je suis connecter");
   logout.textContent = "logout";
   const modifier = document.querySelector(".modifier");
   const buttonAdd = document.querySelector(".buttonAdd");
@@ -115,11 +106,10 @@ if (token) {
   });
   const filters = document.querySelector(".filters");
   filters.style.display = "none";
-  //console.log(logout);
+
 }
+//**** Déconnexion si le token est vide ****//
 logout.addEventListener("click", (e) => {
-  console.log("je me deconnecte car mon token est vide");
-  console.log("je click sur logout");
   window.sessionStorage.setItem("token", "");
   window.sessionStorage.setItem("userId", "");
   window.location.href = "index.html";
