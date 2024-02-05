@@ -320,18 +320,6 @@ footer {
 .errorText {
   display: none;
 }
-.adminEdit {
-  background-color: black;
-  height: 50px;
-  color: white;
-  display: none;
-  text-align: center;
-  line-height: 50px;
-  position: fixed;
-    width: 100%;
-    left: 0%;
-    top: 0;
-}
 .login {
   cursor: pointer;
   font-size: 1.4em;
@@ -350,6 +338,18 @@ footer {
 .modifier {
   display: none;
   align-items: center;
+}
+.adminEdit {
+  background-color: black;
+  height: 50px;
+  color: white;
+  display: none;
+  text-align: center;
+  line-height: 50px;
+  position: fixed;
+    width: 100%;
+    left: 0%;
+    top: 0;
 }
 
 /**** Style de la modal ****/

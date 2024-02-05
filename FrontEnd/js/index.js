@@ -43,8 +43,6 @@ async function displayWorks() {
     figure.appendChild(img);
     figure.appendChild(figcaption);
     gallery.appendChild(figure);
-
-    //**** Ajout des images dans la modal ****//
   });
 }
 
